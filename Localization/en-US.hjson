@@ -1,0 +1,54 @@
+Mods: {
+	SCPMod: {
+		Configs: {
+			GeneralConfig: {
+				Headers.SCP173: SCP 173
+
+				Invincible: {
+					Label: Invincible
+					Tooltip: Should 173 be invincible?
+				}
+
+				DisplayName: General Config
+
+				pickToDamage173: {
+					Label: Damaging pickaxe power
+					Tooltip: Pickaxe power needed to hurt 173
+				}
+
+				moveInDarkness173: {
+					Label: Moves in darkness
+					Tooltip: Can 173 move in the pitch black?
+				}
+
+				invincible173: {
+					Label: Invincible
+					Tooltip: Should 173 be invincible?
+				}
+			}
+
+			ClientConfig: {
+				DisplayName: Client Config
+				Headers.Sounds: Sounds
+
+				horrorSounds: {
+					Label: Stinger sounds
+					Tooltip: The sound that plays when 173 gets close to you.
+				}
+
+				stoneDragSounds: {
+					Label: Stone drag sounds
+					Tooltip: The sound 173 makes when moving around. (can be buggy)
+				}
+
+				blinkWarning: {
+					Label: Blink warning sounds
+					Tooltip: A sound that plays when you blink and two times before.
+				}
+			}
+		}
+
+		Keybinds.Blink.DisplayName: Blink
+		NPCs.SCP173.DisplayName: SCP 173
+	}
+}
