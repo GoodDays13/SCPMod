@@ -2,14 +2,13 @@ Mods: {
 	SCPMod: {
 		Configs: {
 			GeneralConfig: {
+				DisplayName: General Config
 				Headers.SCP173: SCP 173
 
-				Invincible: {
+				invincible173: {
 					Label: Invincible
 					Tooltip: Should 173 be invincible?
 				}
-
-				DisplayName: General Config
 
 				pickToDamage173: {
 					Label: Damaging pickaxe power
@@ -19,11 +18,6 @@ Mods: {
 				moveInDarkness173: {
 					Label: Moves in darkness
 					Tooltip: Can 173 move in the pitch black?
-				}
-
-				invincible173: {
-					Label: Invincible
-					Tooltip: Should 173 be invincible?
 				}
 			}
 
