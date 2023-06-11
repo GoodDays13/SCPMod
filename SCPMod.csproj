@@ -5,6 +5,7 @@
     <AssemblyName>SCPMod</AssemblyName>
     <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Content\NPC - Copy\**" />

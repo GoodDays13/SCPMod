@@ -114,12 +114,12 @@ namespace SCPMod.Content.NPCs
                             dragSound.Stop();
                 }
             }
-            else
+            else // not visible, move
             {
-                NPC.TargetClosest(true);
+                NPC.TargetClosest();
                 NPC.velocity.X = NPC.direction * speed;
                 NPC.velocity.Y = 0;
-                if (Math.Abs(NPC.Center.X - Main.player[NPC.target].Center.X) < speed)
+                if (Math.Abs(NPC.Center.X - Main.player[NPC.target].Center.X) < speed) // if close enough to center on player, center instead
                 {
                     NPC.velocity.X = Main.player[NPC.target].Center.X - NPC.Center.X;
 
@@ -128,30 +128,45 @@ namespace SCPMod.Content.NPCs
                         TryJump(NPC.Center.Y - Main.player[NPC.target].Center.Y);
                 }
 
-                Point check;
+                Point bottomBlock;
+                Point topBlock;
                 if (NPC.direction > 0)
-                    check = PointFromCords(NPC.BottomRight.X, NPC.BottomRight.Y - 1); // TODO see if i should move x one closer
+                {
+                    bottomBlock = PointFromCords(NPC.BottomRight.X, NPC.BottomRight.Y - 1); // TODO see if i should move x one closer
+                    topBlock = PointFromCords(NPC.TopRight.X, NPC.TopRight.Y);
+                }
                 else
-                    check = PointFromCords(NPC.BottomLeft.X, NPC.BottomLeft.Y - 1);
+                {
+                    bottomBlock = PointFromCords(NPC.BottomLeft.X, NPC.BottomLeft.Y - 1);
+                    topBlock = PointFromCords(NPC.TopLeft.X, NPC.TopLeft.Y);
+                }
 
                 bool jumped = false;
-                for (int i = 1; i <= Math.Abs((int)NPC.velocity.X) / 16; i++) {
-                    check.X += NPC.direction;
-                    if (SolidTile(check))
+                for (int i = 1; i <= Math.Abs((int)NPC.velocity.X) / 16; i++) { // check where 173 will go for collisions
+                    topBlock.X += NPC.direction;
+                    bottomBlock.X += NPC.direction;
+                    if (CheckCollision(topBlock, bottomBlock))
                     {
                         if (jumped)
                         {
-                            NPC.velocity.X = NPC.Center.X - check.X * 16 + (8 + NPC.width + 0.5f) * NPC.direction;
+                            // move up against next block
+                            bool right = NPC.direction > 0;
+                            NPC.velocity.X = (bottomBlock.X * 16 + (right ? 0 : 1)) - (right ? NPC.Right.X : NPC.Left.X);
                             break;
                         }
-                        else if (!Jump(check))
+                        else if (!Jump(topBlock, bottomBlock)) // try to jump over collision
                         {
-                            NPC.velocity.X = NPC.Center.X - check.X * 16 + (8 + NPC.width + 0.5f) * NPC.direction;
+                            // if failed, just move up against block
+                            bool right = NPC.direction > 0;
+                            NPC.velocity.X = (bottomBlock.X * 16 + (right ? 0 : 1)) - (right ? NPC.Right.X : NPC.Left.X);
                         }
-                        else
+                        else // successful jump
                         {
-                            check.X -= NPC.direction * i;
-                            check.Y += (int)NPC.velocity.Y / 16;
+                            // reset block X and set new block Y to check post jump
+                            bottomBlock.X -= NPC.direction * i;
+                            bottomBlock.Y += (int)NPC.velocity.Y / 16;
+                            topBlock.X -= NPC.direction * i;
+                            topBlock.Y += (int)NPC.velocity.Y / 16;
                             jumped = true;
                             i = 0;
                         }
@@ -196,15 +211,21 @@ namespace SCPMod.Content.NPCs
                 NPC.position.Y = leftPoint.Y * 16 - NPC.height;
         }
 
-        // returns true if success
-        private bool Jump(Point collision)
+        /// <summary>
+        /// Tries to jump over something 173 will collide with
+        /// </summary>
+        /// <param name="topPoint">Top of 173 where he will collide</param>
+        /// <param name="bottomPoint">Bottom of 173 where he will collideparam>
+        /// <returns>Whether or not it was successful</returns>
+        private bool Jump(Point topPoint, Point bottomPoint)
         {
             for (int i = 1; i <= 6; i++)
             {
-                collision.Y--;
+                topPoint.Y--;
+                bottomPoint.Y--;
                 if (SolidTile(NPC.position.X, NPC.Top.Y - 16 * i))
                     break;
-                if (!SolidTile(collision)) {
+                if (!CheckCollision(topPoint, bottomPoint)) {
                     NPC.velocity.Y = -16 * i;
                     return true;
                 }
@@ -293,6 +314,24 @@ namespace SCPMod.Content.NPCs
             if (NPC.Top.Y > player.Center.Y + 1080 / 2)
                 return false;
             return true;
+        }
+
+        /// <summary>
+        /// Checks for a collision within a vertical collumn of blocks
+        /// </summary>
+        /// <param name="top">Top block of the collumn to check</param>
+        /// <param name="bottom">Bottom block of the collumn to check</param>
+        /// <returns>If there were any solid tiles</returns>
+        private bool CheckCollision(Point top, Point bottom)
+        {
+            for (int i = top.Y; i <= bottom.Y; i++)
+            {
+                if (SolidTile(new Point(top.X, i)))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         //private bool CheckFacing(Player player)
