@@ -76,7 +76,7 @@ namespace SCPMod.Content.NPCs
             MoveDown();
             float temp = Visible;
 
-            if (!Main.dedServ && ModContent.GetInstance<GeneralConfig>().moveInDarkness173)
+            if (!Main.dedServ && ModContent.GetInstance<GeneralConfig>().MoveInDarkness173)
                 Darkness = Lighting.GetColor(PointFromCords(NPC.position.X, NPC.position.Y)) == Color.Black ? 1 : 0; // TODO check all blocks it's in
             else
                 Darkness = 0;
@@ -85,7 +85,7 @@ namespace SCPMod.Content.NPCs
 
             if (Main.netMode != NetmodeID.Server)
             {
-                if (ModContent.GetInstance<ClientConfig>().horrorSounds &&
+                if (ModContent.GetInstance<ClientConfig>().HorrorSounds &&
                     Visible == 1 && temp == 0 && !Main.player[Main.myPlayer].DeadOrGhost && 
                     Main.player[Main.myPlayer].position.Distance(NPC.position) - 
                         NPC.width/2 - Player.defaultWidth/2 < speed * 2)
@@ -173,7 +173,7 @@ namespace SCPMod.Content.NPCs
                     }
                 }
 
-                if (Main.netMode == NetmodeID.Server || !ModContent.GetInstance<ClientConfig>().stoneDragSounds)
+                if (Main.netMode == NetmodeID.Server || !ModContent.GetInstance<ClientConfig>().StoneDragSounds)
                     return;
 
                 ActiveSound dragSound = SoundEngine.FindActiveSound(stoneDrag);
@@ -252,9 +252,9 @@ namespace SCPMod.Content.NPCs
 
         public override bool? CanBeHitByItem(Player player, Item item)
         {
-            if (ModContent.GetInstance<GeneralConfig>().invincible173)
+            if (ModContent.GetInstance<GeneralConfig>().Invincible173)
                 return false;
-            if (item.pick >= ModContent.GetInstance<GeneralConfig>().pickToDamage173)
+            if (item.pick >= ModContent.GetInstance<GeneralConfig>().PickToDamage173)
                 return null;
             return false;
         }
@@ -298,7 +298,7 @@ namespace SCPMod.Content.NPCs
                 return true;
             if (!CheckInRange(player))
                 return false;
-            if (player.GetModPlayer<Blinking>().blinking)
+            if (player.GetModPlayer<Blinking>().IsBlinking)
                 return false;
             return true;
         }
@@ -322,9 +322,9 @@ namespace SCPMod.Content.NPCs
         /// <param name="top">Top block of the collumn to check</param>
         /// <param name="bottom">Bottom block of the collumn to check</param>
         /// <returns>If there were any solid tiles</returns>
-        private bool CheckCollision(Point top, Point bottom)
+        private static bool CheckCollision(Point top, Point bottom)
         {
-            for (int i = top.Y; i <= bottom.Y; i++)
+            for (int i = bottom.Y; i >= top.Y; i--)
             {
                 if (SolidTile(new Point(top.X, i)))
                 {

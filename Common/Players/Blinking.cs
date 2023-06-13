@@ -1,32 +1,33 @@
 ﻿using Microsoft.Xna.Framework;
+using SCPMod.Common.Config;
+using SCPMod.Common.Systems;
+using SCPMod.Content.NPCs;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using SCPMod.Common.Config;
-using SCPMod.Common.Systems;
-using SCPMod.Content.NPCs;
 using static Terraria.GameContent.Events.ScreenDarkness;
 
 namespace SCPMod.Common.Players
 {
     public class Blinking : ModPlayer
     {
-        public bool blinking => blink > 0;
+        public bool IsBlinking => blink > 0;
         //public int facing { get; private set; }
         private int blink;
-        private int blinkTimer;
+        public int BlinkTimer { get; set; }
         private int lastBlinkTimerSet;
-        private void SetBlinkTimer(int time) { blinkTimer = time; lastBlinkTimerSet = blinkTimer; }
+        private void SetBlinkTimer(int time) { BlinkTimer = time; lastBlinkTimerSet = BlinkTimer; }
+        private void SetBlinkTimer() { SetBlinkTimer(Main.rand.Next(timeToBlinkMin, timeToBlinkMax + 1)); }
+        public void RoundBlinkTimer(int frames) { BlinkTimer -= BlinkTimer % frames; }
         private readonly int timeToBlinkMin = 360;
         private readonly int timeToBlinkMax = 600;
-        private int TimeToBlink => Main.rand.Next(timeToBlinkMin, timeToBlinkMax + 1);
 
         public override void OnRespawn()
         {
             if (Main.player[Main.myPlayer] != Player)
                 return;
-            SetBlinkTimer(TimeToBlink);
+            SetBlinkTimer();
         }
 
         public override void OnEnterWorld()
@@ -34,23 +35,24 @@ namespace SCPMod.Common.Players
             if (Main.player[Main.myPlayer] != Player)
                 return;
             frontColor = Color.Black;
-            SetBlinkTimer(TimeToBlink);
+            SetBlinkTimer();
         }
 
         public override void PostUpdate()
         {
-            if (Main.player[Main.myPlayer] != Player)
-                return;
+            //if (Main.player[Main.myPlayer] != Player)
+            //    return;
             if (NPC.AnyNPCs(ModContent.NPCType<SCP173>()))
-                blinkTimer--;
-            else {
-                SetBlinkTimer(TimeToBlink);
+                BlinkTimer--;
+            else
+            {
+                SetBlinkTimer();
                 lastBlinkTimerSet += 60;
                 return;
             }
 
-            if (ModContent.GetInstance<ClientConfig>().blinkWarning)
-                switch (blinkTimer - 4)
+            if (ModContent.GetInstance<ClientConfig>().BlinkWarning)
+                switch (BlinkTimer - 4)
                 {
                     case 120:
                     case 60:
@@ -59,26 +61,26 @@ namespace SCPMod.Common.Players
                         break;
                 }
 
-            if (blinkTimer == 1)
+            if (BlinkTimer == 1)
                 Player.eyeHelper.BlinkBecausePlayerGotHurt();
-            if (blinkTimer == 0)
+            if (BlinkTimer == 0)
                 blink = 15;
             if (blink <= 1 && KeybindSystem.BlinkKeybind.Current)
                 blink = 2;
             if (Player.dead)
                 blink = 0;
 
-            if (blinking)
+            if (IsBlinking)
             {
-                SetBlinkTimer(TimeToBlink);
+                SetBlinkTimer();
                 blink--;
 
                 screenObstruction = 1;
             }
-            else if (blinkTimer < 5)
-                screenObstruction = 1f - 0.2f * blinkTimer;
-            else if (lastBlinkTimerSet - blinkTimer <= 5)
-                screenObstruction = 1f - 0.2f * (lastBlinkTimerSet - blinkTimer);
+            else if (BlinkTimer < 5)
+                screenObstruction = 1f - 0.2f * BlinkTimer;
+            else if (lastBlinkTimerSet - BlinkTimer <= 5)
+                screenObstruction = 1f - 0.2f * (lastBlinkTimerSet - BlinkTimer);
         }
     }
 }

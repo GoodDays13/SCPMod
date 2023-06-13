@@ -1,23 +1,35 @@
-Mods: {
+﻿Mods: {
 	SCPMod: {
 		Configs: {
 			GeneralConfig: {
 				DisplayName: General Config
 				Headers.SCP173: SCP 173
 
-				invincible173: {
+				Invincible173: {
 					Label: Invincible
-					Tooltip: Should 173 be invincible?
+					Tooltip: ""
 				}
 
-				pickToDamage173: {
+				PickToDamage173: {
 					Label: Damaging pickaxe power
 					Tooltip: Pickaxe power needed to hurt 173
 				}
 
-				moveInDarkness173: {
+				MoveInDarkness173: {
 					Label: Moves in darkness
-					Tooltip: Can 173 move in the pitch black?
+					Tooltip: ""
+				}
+
+				SyncBlinks: {
+					Label: Sync blinking in multiplayer
+					Tooltip: '''Fully means blinks will always happen at the same time for everyone.
+					Timeframe means blinks will only happen on certain points that happen regularly.
+					None means there is no sync. SPC 173 will almost never move with 2 people around.'''
+				}
+
+				SecondsBetweenBlinkSync: {
+					Tooltip: '''How many seconds between each sync of blink timers.
+					If set to Timeframe, determines the timeframe (higher means more often blinking at the same time)'''
 				}
 			}
 
@@ -25,17 +37,17 @@ Mods: {
 				DisplayName: Client Config
 				Headers.Sounds: Sounds
 
-				horrorSounds: {
+				HorrorSounds: {
 					Label: Stinger sounds
 					Tooltip: The sound that plays when 173 gets close to you.
 				}
 
-				stoneDragSounds: {
+				StoneDragSounds: {
 					Label: Stone drag sounds
 					Tooltip: The sound 173 makes when moving around. (can be buggy)
 				}
 
-				blinkWarning: {
+				BlinkWarning: {
 					Label: Blink warning sounds
 					Tooltip: A sound that plays when you blink and two times before.
 				}

@@ -9,13 +9,22 @@ namespace SCPMod.Common.Config
 
         [Header("SCP173")]
         [DefaultValue(true)]
-        public bool invincible173;
+        public bool Invincible173;
 
         [DefaultValue(110)]
         [Range(0, int.MaxValue)]
-        public int pickToDamage173;
+        public int PickToDamage173;
 
         [DefaultValue(true)]
-        public bool moveInDarkness173;
+        public bool MoveInDarkness173;
+
+        [DrawTicks]
+        [OptionStrings(new string[] { "Fully", "Timeframe", "None" })]
+        [DefaultValue("Timeframe")]
+        public string SyncBlinks;
+
+        [DefaultValue(1f)]
+        [Range(0, 2f)]
+        public float SecondsBetweenBlinkSync;
     }
 }

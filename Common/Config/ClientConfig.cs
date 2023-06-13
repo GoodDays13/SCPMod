@@ -9,12 +9,12 @@ namespace SCPMod.Common.Config
 
         [Header("Sounds")]
         [DefaultValue(true)]
-        public bool horrorSounds;
+        public bool HorrorSounds;
 
         [DefaultValue(false)]
-        public bool stoneDragSounds;
+        public bool StoneDragSounds;
 
         [DefaultValue(true)]
-        public bool blinkWarning;
+        public bool BlinkWarning;
     }
 }
