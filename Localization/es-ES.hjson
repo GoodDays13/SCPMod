@@ -30,13 +30,14 @@ Mods: {
 						'''
 				}
 
-				SecondsBetweenBlinkSync: {
+				TimeframeInSeconds: {
+					Label: Duración del marco de tiempo
 					Tooltip:
 						'''
-						Cuántos segundos entre cada sincronización de temporizadores de parpadeo.
-						Si se establece en Timeframe, determina el marco de tiempo (más alto significa que parpadean más a menudo al mismo tiempo)
+						El marco de tiempo entre los parpadeos de todos.
+						Determina el intervalo en el que los parpadeos se alinean para todos los jugadores.
+						Valores más altos aumentan la probabilidad de parpadear al mismo tiempo.
 						'''
-					Label: Segundos entre sincronización de parpadeos
 				}
 			}
 

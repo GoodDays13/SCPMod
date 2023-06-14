@@ -25,18 +25,19 @@ Mods: {
 					Tooltip:
 						'''
 						Fully means blinks will always happen at the same time for everyone.
-						Timeframe means blinks will only happen on certain points that happen regularly.
+						Timeframe synchronizes blinks by aligning timers to multiples of a fixed interval.
 						None means there is no sync. SPC 173 will almost never move with 2 people around.
 						'''
 				}
 
-				SecondsBetweenBlinkSync: {
+				TimeframeInSeconds: {
+					Label: Timeframe length
 					Tooltip:
 						'''
-						How many seconds between each sync of blink timers.
-						If set to Timeframe, determines the timeframe (higher means more often blinking at the same time)
+						The timeframe between everyone's blinks.
+						Determines the interval at which blinks are aligned for all players.
+						Higher values increase the likelihood of blinking at the same time.
 						'''
-					Label: Seconds Between Blink Sync
 				}
 			}
 

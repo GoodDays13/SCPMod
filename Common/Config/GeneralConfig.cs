@@ -25,6 +25,6 @@ namespace SCPMod.Common.Config
 
         [DefaultValue(1f)]
         [Range(0, 2f)]
-        public float SecondsBetweenBlinkSync;
+        public float TimeframeInSeconds;
     }
 }

@@ -35,7 +35,7 @@ namespace SCPMod.Common.Players
             return LowestTimer == int.MaxValue ? 0 : LowestTimer;
         }
 
-        private void AutoSetBlinkTimer()
+        private void SetBlinkTimer()
         {
             if (Main.myPlayer != Player.whoAmI)
                 return;
@@ -67,7 +67,7 @@ namespace SCPMod.Common.Players
                 else
                 {
                     int time = DefaultBlinkTime;
-                    int round = (int)(ModContent.GetInstance<GeneralConfig>().SecondsBetweenBlinkSync * 60);
+                    int round = (int)(ModContent.GetInstance<GeneralConfig>().TimeframeInSeconds * 60);
                     int modDiff = time % round - targetTime % round;
                     if (modDiff > round / 2)
                         modDiff -= round;
@@ -84,13 +84,13 @@ namespace SCPMod.Common.Players
 
         public override void OnRespawn()
         {
-            AutoSetBlinkTimer();
+            SetBlinkTimer();
         }
 
         public override void OnEnterWorld()
         {
             frontColor = Color.Black;
-            AutoSetBlinkTimer();
+            SetBlinkTimer();
         }
 
         public override void PostUpdate()
@@ -128,11 +128,11 @@ namespace SCPMod.Common.Players
                 blink--;
                 if (blink == 5 && IsFirstPlayer())
                 {
-                    AutoSetBlinkTimer();
+                    SetBlinkTimer();
                 }
                 else if (blink == 0 && !IsFirstPlayer())
                 {
-                    AutoSetBlinkTimer();
+                    SetBlinkTimer();
                 }
             }
             if (Main.myPlayer == Player.whoAmI)
