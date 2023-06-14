@@ -22,15 +22,21 @@ Mods: {
 
 				SyncBlinks: {
 					Label: Sincronizar parpadeos en multijugador
-					Tooltip: '''Fully significa que los parpadeos siempre ocurrirán al mismo tiempo para todos.
-					Timeframe significa que los parpadeos solo ocurrirán en ciertos momentos que suceden regularmente.
-					None significa que no hay sincronización. SCP 173 casi nunca se moverá cuando haya 2 personas cerca.'''
+					Tooltip:
+						'''
+						Fully significa que los parpadeos siempre ocurrirán al mismo tiempo para todos.
+						Timeframe significa que los parpadeos solo ocurrirán en ciertos momentos que suceden regularmente.
+						None significa que no hay sincronización. SCP 173 casi nunca se moverá cuando haya 2 personas cerca.
+						'''
 				}
 
 				SecondsBetweenBlinkSync: {
+					Tooltip:
+						'''
+						Cuántos segundos entre cada sincronización de temporizadores de parpadeo.
+						Si se establece en Timeframe, determina el marco de tiempo (más alto significa que parpadean más a menudo al mismo tiempo)
+						'''
 					Label: Segundos entre sincronización de parpadeos
-					Tooltip: '''Cuántos segundos entre cada sincronización de temporizadores de parpadeo.
-					Si se establece en Timeframe, determina el marco de tiempo (más alto significa que parpadean más a menudo al mismo tiempo)'''
 				}
 			}
 

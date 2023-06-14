@@ -31,7 +31,7 @@ namespace SCPMod.Content.NPCs
 
         public override void SetStaticDefaults()
         {
-            // DisplayName.SetDefault("SCP 173");
+            NPCID.Sets.NoMultiplayerSmoothingByType[NPC.type] = true;
         }
 
         public override void SetDefaults()
@@ -41,10 +41,12 @@ namespace SCPMod.Content.NPCs
             NPC.damage = 10000;
             NPC.lifeMax = 1000;
             NPC.HitSound = SoundID.Tink;
+            //NPC.DeathSound = SoundID.Tink;
             NPC.value = 10000;
             NPC.knockBackResist = 1;
             NPC.aiStyle = -1;
             NPC.noGravity = true;
+            NPC.chaseable = false;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -64,7 +66,7 @@ namespace SCPMod.Content.NPCs
 
         public override void OnHitPlayer(Player target, Player.HurtInfo hurtInfo)
         {
-            target.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason(target.name + " had their neck snapped."), 1000, 0);
+            target.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason($"{target.name} had their neck snapped."), 1000, 0);
             SoundEngine.PlaySound(new SoundStyle($"SCPMod/Assets/173/NeckSnap") with { 
                 Volume = Main.soundVolume,
                 Variants = new int[] { 1, 2, 3 }
@@ -110,8 +112,7 @@ namespace SCPMod.Content.NPCs
                 if (!false)
                 {
                     ActiveSound dragSound = SoundEngine.FindActiveSound(stoneDrag);
-                        if (dragSound != null)
-                            dragSound.Stop();
+                    dragSound?.Stop();
                 }
             }
             else // not visible, move

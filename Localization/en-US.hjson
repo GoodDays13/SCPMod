@@ -1,4 +1,4 @@
-﻿Mods: {
+Mods: {
 	SCPMod: {
 		Configs: {
 			GeneralConfig: {
@@ -22,14 +22,21 @@
 
 				SyncBlinks: {
 					Label: Sync blinking in multiplayer
-					Tooltip: '''Fully means blinks will always happen at the same time for everyone.
-					Timeframe means blinks will only happen on certain points that happen regularly.
-					None means there is no sync. SPC 173 will almost never move with 2 people around.'''
+					Tooltip:
+						'''
+						Fully means blinks will always happen at the same time for everyone.
+						Timeframe means blinks will only happen on certain points that happen regularly.
+						None means there is no sync. SPC 173 will almost never move with 2 people around.
+						'''
 				}
 
 				SecondsBetweenBlinkSync: {
-					Tooltip: '''How many seconds between each sync of blink timers.
-					If set to Timeframe, determines the timeframe (higher means more often blinking at the same time)'''
+					Tooltip:
+						'''
+						How many seconds between each sync of blink timers.
+						If set to Timeframe, determines the timeframe (higher means more often blinking at the same time)
+						'''
+					Label: Seconds Between Blink Sync
 				}
 			}
 
