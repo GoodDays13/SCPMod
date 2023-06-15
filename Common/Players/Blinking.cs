@@ -120,8 +120,10 @@ namespace SCPMod.Common.Players
             if (Player.dead)
                 blink = 0;
 
+#if DEBUG
             if (BlinkTimer % 60 == 0)
                 Print(BlinkTimer / 60 + " seconds for " + Player.name);
+#endif
 
             if (IsBlinking)
             {
@@ -181,6 +183,7 @@ namespace SCPMod.Common.Players
             SyncManualBlink();
         }
 
+#if DEBUG
         public static void Print(string text)
         {
             if (Main.netMode == NetmodeID.Server)
@@ -191,7 +194,8 @@ namespace SCPMod.Common.Players
             {
                 Console.WriteLine("Client: " + text);
             }
-        }
+        } 
+#endif
 
 
         // NETWORKING

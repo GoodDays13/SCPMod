@@ -248,7 +248,7 @@ namespace SCPMod.Content.NPCs
 
         public override bool CanHitPlayer(Player target, ref int cooldownSlot)
         {
-            return !CheckSeen(target);
+            return Visible != 1;
         }
 
         public override bool? CanBeHitByItem(Player player, Item item)
