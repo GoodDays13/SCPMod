@@ -8,6 +8,10 @@ namespace SCPMod.Common.Config
         public override ConfigScope Mode => ConfigScope.ServerSide;
 
         [Header("SCP173")]
+        [DefaultValue(360)]
+        [Range(120, 600)]
+        public int Speed173;
+
         [DefaultValue(true)]
         public bool Invincible173;
 

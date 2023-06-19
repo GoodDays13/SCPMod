@@ -13,7 +13,8 @@ namespace SCPMod.Content.NPCs
 {
     public class SCP173 : ModNPC
     {
-        private readonly float speed = 32;
+        private float speed = 48;
+        private readonly int jumpHight = 8;
 
         private SoundStyle stoneDrag = new SoundStyle($"SCPMod/Assets/173/StoneDrag") with
         {
@@ -46,7 +47,10 @@ namespace SCPMod.Content.NPCs
             NPC.knockBackResist = 1;
             NPC.aiStyle = -1;
             NPC.noGravity = true;
+            NPC.noTileCollide = true;
             NPC.chaseable = false;
+
+            speed = ModContent.GetInstance<GeneralConfig>().Speed173 / 7.5f;
         }
 
         public override float SpawnChance(NPCSpawnInfo spawnInfo)
@@ -97,6 +101,8 @@ namespace SCPMod.Content.NPCs
                         Variants = new int[] { 0, 1, 2, 3, 4, 5, 9, 10 }
                     });
             }
+            if (temp == 1 && Visible == 1)
+                speed = ModContent.GetInstance<GeneralConfig>().Speed173 / 7.5f;
             
             if (Visible == 1)
             {
@@ -125,54 +131,59 @@ namespace SCPMod.Content.NPCs
                     NPC.velocity.X = Main.player[NPC.target].Center.X - NPC.Center.X;
 
                     if (NPC.Bottom.Y - Main.player[NPC.target].Bottom.Y > 0 &&
-                        NPC.Bottom.Y - Main.player[NPC.target].Bottom.Y < 16 * 6)
-                        TryJump(NPC.Center.Y - Main.player[NPC.target].Center.Y);
+                        NPC.Bottom.Y - Main.player[NPC.target].Bottom.Y < 16 * jumpHight)
+                        JumpHight(NPC.Center.Y - Main.player[NPC.target].Center.Y);
                 }
 
-                Point bottomBlock;
-                Point topBlock;
+                int bottomTile;
+                int topTile;
+                int sideX;
                 if (NPC.direction > 0)
                 {
-                    bottomBlock = PointFromCords(NPC.BottomRight.X, NPC.BottomRight.Y - 1); // TODO see if i should move x one closer
-                    topBlock = PointFromCords(NPC.TopRight.X, NPC.TopRight.Y);
+                    bottomTile = (int)(NPC.BottomRight.Y - 1) / 16;
+                    topTile = (int)NPC.TopRight.Y / 16;
+                    sideX = (int)(NPC.Right.X - 1);
                 }
                 else
                 {
-                    bottomBlock = PointFromCords(NPC.BottomLeft.X, NPC.BottomLeft.Y - 1);
-                    topBlock = PointFromCords(NPC.TopLeft.X, NPC.TopLeft.Y);
+                    bottomTile = (int)(NPC.BottomLeft.Y - 1) / 16;
+                    topTile = (int)NPC.TopLeft.Y / 16;
+                    sideX = (int)NPC.Left.X;
                 }
 
                 bool jumped = false;
-                for (int i = 1; i <= Math.Abs((int)NPC.velocity.X) / 16; i++) { // check where 173 will go for collisions
-                    topBlock.X += NPC.direction;
-                    bottomBlock.X += NPC.direction;
-                    if (CheckCollision(topBlock, bottomBlock))
+                for (int x = sideX + NPC.direction; Math.Abs(sideX - x) <= Math.Abs((int)NPC.velocity.X); x += NPC.direction) { // check where 173 will go for collisions
+                    //topBlock.X;
+                    //bottomBlock.X += NPC.direction;
+                    if (CheckCollision(topTile, bottomTile, x / 16))
                     {
                         if (jumped)
                         {
                             // move up against next block
-                            bool right = NPC.direction > 0;
-                            NPC.velocity.X = (bottomBlock.X * 16 + (right ? 0 : 1)) - (right ? NPC.Right.X : NPC.Left.X);
+                            bool right = NPC.direction == 1;
+                            NPC.velocity.X = ((x - x%16) + (right ? 0 : 16)) - (right ? NPC.Right.X : NPC.Left.X);
                             break;
                         }
-                        else if (!Jump(topBlock, bottomBlock)) // try to jump over collision
+                        else if (!JumpOver(topTile, bottomTile, x/16)) // try to jump over collision
                         {
                             // if failed, just move up against block
-                            bool right = NPC.direction > 0;
-                            NPC.velocity.X = (bottomBlock.X * 16 + (right ? 0 : 1)) - (right ? NPC.Right.X : NPC.Left.X);
+                            bool right = NPC.direction == 1;
+                            NPC.velocity.X = ((x - x % 16) + (right ? 0 : 16)) - (right ? NPC.Right.X : NPC.Left.X);
+                            break;
                         }
                         else // successful jump
                         {
                             // reset block X and set new block Y to check post jump
-                            bottomBlock.X -= NPC.direction * i;
-                            bottomBlock.Y += (int)NPC.velocity.Y / 16;
-                            topBlock.X -= NPC.direction * i;
-                            topBlock.Y += (int)NPC.velocity.Y / 16;
+                            bottomTile += (int)NPC.velocity.Y / 16;
+                            topTile += (int)NPC.velocity.Y / 16;
                             jumped = true;
-                            i = 0;
+                            x = sideX;
                         }
                     }
                 }
+
+                NPC.position += NPC.velocity;
+                NPC.velocity = Vector2.Zero;
 
                 if (Main.netMode == NetmodeID.Server || !ModContent.GetInstance<ClientConfig>().StoneDragSounds)
                     return;
@@ -183,9 +194,6 @@ namespace SCPMod.Content.NPCs
                 else if (NPC.velocity.X < 1 && dragSound != null && dragSound.IsPlaying)
                     dragSound.Stop();
             }
-            //if (SolidTile(NPC.BottomRight.X, NPC.BottomRight.Y - 16) ||
-            //    SolidTile(NPC.BottomLeft.X, NPC.BottomLeft.Y - 16))
-            //    NPC.position.Y -= speed;
         }
 
         private void MoveDown()
@@ -215,18 +223,19 @@ namespace SCPMod.Content.NPCs
         /// <summary>
         /// Tries to jump over something 173 will collide with
         /// </summary>
-        /// <param name="topPoint">Top of 173 where he will collide</param>
-        /// <param name="bottomPoint">Bottom of 173 where he will collideparam>
+        /// <param name="top">Top of 173 where he will collide</param>
+        /// <param name="bottom">Bottom of 173 where he will collide</param>
+        /// <param name="tileX"></param>
         /// <returns>Whether or not it was successful</returns>
-        private bool Jump(Point topPoint, Point bottomPoint)
+        private bool JumpOver(int top, int bottom, int tileX)
         {
-            for (int i = 1; i <= 6; i++)
+            for (int i = 1; i <= jumpHight; i++)
             {
-                topPoint.Y--;
-                bottomPoint.Y--;
+                top--;
+                bottom--;
                 if (SolidTile(NPC.position.X, NPC.Top.Y - 16 * i))
                     break;
-                if (!CheckCollision(topPoint, bottomPoint)) {
+                if (!CheckCollision(top, bottom, tileX)) {
                     NPC.velocity.Y = -16 * i;
                     return true;
                 }
@@ -234,7 +243,7 @@ namespace SCPMod.Content.NPCs
             return false;
         }
 
-        private void TryJump(float distance)
+        private void JumpHight(float distance)
         {
             Point check = PointFromCords(NPC.Center.X, NPC.Center.Y);
             for (int i = 1; i <= distance / 16; i++)
@@ -323,11 +332,11 @@ namespace SCPMod.Content.NPCs
         /// <param name="top">Top block of the collumn to check</param>
         /// <param name="bottom">Bottom block of the collumn to check</param>
         /// <returns>If there were any solid tiles</returns>
-        private static bool CheckCollision(Point top, Point bottom)
+        private static bool CheckCollision(int top, int bottom, int x)
         {
-            for (int i = bottom.Y; i >= top.Y; i--)
+            for (int i = bottom; i >= top; i--)
             {
-                if (SolidTile(new Point(top.X, i)))
+                if (SolidTile(new Point(x, i)))
                 {
                     return true;
                 }
