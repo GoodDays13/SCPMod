@@ -5,6 +5,11 @@ Mods: {
 				DisplayName: Configuración General
 				Headers.SCP173: SCP 173
 
+				Speed173: {
+					Label: Velocidad en pies/segundo
+					Tooltip: La velocidad a la que se mueve el SCP 173 en pies por segundo
+				}
+
 				Invincible173: {
 					Label: Invencible
 					Tooltip: ""
