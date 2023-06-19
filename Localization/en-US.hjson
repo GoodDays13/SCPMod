@@ -59,6 +59,11 @@ Mods: {
 					Label: Blink warning sounds
 					Tooltip: A sound that plays when you blink and two times before.
 				}
+
+				BlinkWarningBoost: {
+					Label: Blink Warning Boost
+					Tooltip: Makes the blink warning sound lounder by adding this and your sound volume.
+				}
 			}
 		}
 

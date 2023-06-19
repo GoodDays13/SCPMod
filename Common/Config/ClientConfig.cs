@@ -16,5 +16,10 @@ namespace SCPMod.Common.Config
 
         [DefaultValue(true)]
         public bool BlinkWarning;
+
+        [DefaultValue(50)]
+        [Range(0, 100)]
+        [Slider]
+        public int BlinkWarningBoost;
     }
 }

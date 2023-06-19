@@ -101,13 +101,17 @@ namespace SCPMod.Common.Players
                 return;
             }
 
-            if (Main.myPlayer == Player.whoAmI && ModContent.GetInstance<ClientConfig>().BlinkWarning)
+            if (!ManualBlink && Main.myPlayer == Player.whoAmI && ModContent.GetInstance<ClientConfig>().BlinkWarning)
                 switch (BlinkTimer - 4)
                 {
                     case 120:
                     case 60:
                     case 0:
-                        SoundEngine.PlaySound(SoundID.MenuTick with { Pitch = -0.5f, Volume = Main.soundVolume });
+                        SoundEngine.PlaySound(SoundID.MenuTick with
+                        {
+                            Pitch = -0.5f,
+                            Volume = Main.soundVolume + ModContent.GetInstance<ClientConfig>().BlinkWarningBoost / 100f
+                        });
                         break;
                 }
 
