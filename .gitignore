@@ -1,4 +1,6 @@
 .vs
-obj
+.idea/
+bin/
+obj/
 /SCPMod.csproj.user
 Properties
