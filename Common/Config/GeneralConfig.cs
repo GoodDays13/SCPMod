@@ -23,7 +23,7 @@ namespace SCPMod.Common.Config
         public bool MoveInDarkness173;
 
         [DrawTicks]
-        [OptionStrings(new string[] { "Fully", "Timeframe", "None" })]
+        [OptionStrings(new[] { "Fully", "Timeframe", "None" })]
         [DefaultValue("Timeframe")]
         public string SyncBlinks;
 

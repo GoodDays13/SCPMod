@@ -14,7 +14,7 @@ namespace SCPMod.Content.NPCs
     public class SCP173 : ModNPC
     {
         private float speed = 48;
-        private readonly int jumpHight = 8;
+        private readonly int jumpHeight = 8;
 
         private SoundStyle stoneDrag = new SoundStyle($"SCPMod/Assets/173/StoneDrag") with
         {
@@ -73,7 +73,7 @@ namespace SCPMod.Content.NPCs
             target.KillMe(Terraria.DataStructures.PlayerDeathReason.ByCustomReason($"{target.name} had their neck snapped."), 1000, 0);
             SoundEngine.PlaySound(new SoundStyle($"SCPMod/Assets/173/NeckSnap") with { 
                 Volume = Main.soundVolume,
-                Variants = new int[] { 1, 2, 3 }
+                Variants = new[] { 1, 2, 3 }
             }, target.position);
         }
 
@@ -98,7 +98,7 @@ namespace SCPMod.Content.NPCs
                     SoundEngine.PlaySound(new SoundStyle($"SCPMod/Assets/Horror/Horror") with
                     {
                         Volume = Main.soundVolume,
-                        Variants = new int[] { 0, 1, 2, 3, 4, 5, 9, 10 }
+                        Variants = new[] { 0, 1, 2, 3, 4, 5, 9, 10 }
                     });
             }
             if (temp == 1 && Visible == 1)
@@ -113,13 +113,10 @@ namespace SCPMod.Content.NPCs
                     SoundEngine.PlaySound(new SoundStyle($"SCPMod/Assets/173/Rattle") with
                     {
                         Volume = Main.soundVolume,
-                        Variants = new int[] {1, 2, 3}
+                        Variants = new[] {1, 2, 3}
                     }, NPC.position);
-                if (!false)
-                {
-                    ActiveSound dragSound = SoundEngine.FindActiveSound(stoneDrag);
-                    dragSound?.Stop();
-                }
+                ActiveSound dragSound = SoundEngine.FindActiveSound(stoneDrag);
+                dragSound?.Stop();
             }
             else // not visible, move
             {
@@ -131,8 +128,8 @@ namespace SCPMod.Content.NPCs
                     NPC.velocity.X = Main.player[NPC.target].Center.X - NPC.Center.X;
 
                     if (NPC.Bottom.Y - Main.player[NPC.target].Bottom.Y > 0 &&
-                        NPC.Bottom.Y - Main.player[NPC.target].Bottom.Y < 16 * jumpHight)
-                        JumpHight(NPC.Center.Y - Main.player[NPC.target].Center.Y);
+                        NPC.Bottom.Y - Main.player[NPC.target].Bottom.Y < 16 * jumpHeight)
+                        JumpHeight(NPC.Center.Y - Main.player[NPC.target].Center.Y);
                 }
 
                 int bottomTile;
@@ -191,7 +188,7 @@ namespace SCPMod.Content.NPCs
                 ActiveSound dragSound = SoundEngine.FindActiveSound(stoneDrag);
                 if (NPC.velocity.X >= 1 && (dragSound == null || !dragSound.IsPlaying))
                     SoundEngine.PlaySound(stoneDrag, NPC.position);
-                else if (NPC.velocity.X < 1 && dragSound != null && dragSound.IsPlaying)
+                else if (NPC.velocity.X < 1 && dragSound is { IsPlaying: true })
                     dragSound.Stop();
             }
         }
@@ -229,7 +226,7 @@ namespace SCPMod.Content.NPCs
         /// <returns>Whether or not it was successful</returns>
         private bool JumpOver(int top, int bottom, int tileX)
         {
-            for (int i = 1; i <= jumpHight; i++)
+            for (int i = 1; i <= jumpHeight; i++)
             {
                 top--;
                 bottom--;
@@ -243,7 +240,7 @@ namespace SCPMod.Content.NPCs
             return false;
         }
 
-        private void JumpHight(float distance)
+        private void JumpHeight(float distance)
         {
             Point check = PointFromCords(NPC.Center.X, NPC.Center.Y);
             for (int i = 1; i <= distance / 16; i++)
@@ -327,10 +324,11 @@ namespace SCPMod.Content.NPCs
         }
 
         /// <summary>
-        /// Checks for a collision within a vertical collumn of blocks
+        /// Checks for a collision within a vertical column of blocks
         /// </summary>
-        /// <param name="top">Top block of the collumn to check</param>
-        /// <param name="bottom">Bottom block of the collumn to check</param>
+        /// <param name="top">Top block of the column to check</param>
+        /// <param name="bottom">Bottom block of the column to check</param>
+        /// <param name="x">The x position to check</param>
         /// <returns>If there were any solid tiles</returns>
         private static bool CheckCollision(int top, int bottom, int x)
         {
