@@ -67,7 +67,7 @@ Mods: {
 
 				BlinkWarningBoost: {
 					Label: Blink Warning Boost
-					Tooltip: Makes the blink warning sound lounder by adding this and your sound volume.
+					Tooltip: Makes the blink warning sound louder by adding this and your sound volume.
 				}
 			}
 		}
