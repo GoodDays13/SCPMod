@@ -49,6 +49,7 @@ namespace SCPMod.Content.NPCs
             NPC.noGravity = true;
             NPC.noTileCollide = true;
             NPC.chaseable = false;
+            NPC.dontTakeDamage = ModContent.GetInstance<GeneralConfig>().Invincible173;
 
             speed = ModContent.GetInstance<GeneralConfig>().Speed173 / 7.5f;
         }
@@ -259,8 +260,6 @@ namespace SCPMod.Content.NPCs
 
         public override bool? CanBeHitByItem(Player player, Item item)
         {
-            if (ModContent.GetInstance<GeneralConfig>().Invincible173)
-                return false;
             if (item.pick >= ModContent.GetInstance<GeneralConfig>().PickToDamage173)
                 return null;
             return false;
