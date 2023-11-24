@@ -3,4 +3,5 @@
 bin/
 obj/
 /SCPMod.csproj.user
+*.DotSettings.user
 Properties
