@@ -1,0 +1,2 @@
+Adds SCP 173 to Terraria
+Check the config for things like invincibility.
